@@ -1,84 +1,69 @@
 package com.example.animationproject
 
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
+import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
-import android.view.animation.AnimationUtils
-import android.widget.ImageView
-import android.widget.TextView
-import com.example.animationproject.databinding.ActivityMainBinding
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.Button
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var binding: ActivityMainBinding
+
+    @Composable
+    fun AnimationProject(function: @Composable () -> Unit) {
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContent {
+            AnimationProject {
+                var visible: Boolean by remember { mutableStateOf(true) }
+                Column (
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    AnimatedVisibility(
+                        visible = visible,
+                        enter = scaleIn(),
+                        exit = scaleOut()) {
+                        Box(
+                            modifier = Modifier
+                                .size(220.dp)
+                                .background(Color(0XFF4A8FF3))
+                        )
+                    }
+                    Spacer(modifier = Modifier.size(22.dp))
+                    Button(onClick = {visible = !visible}) {
+                        Text(
+                            text = if(visible) "Hide" else "Show",
+                            fontSize = 22.sp
+                        )
+                    }
+                }
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        setSupportActionBar(binding.toolbar)
-
-        //We load the animation
-        val ttbAnim = AnimationUtils.loadAnimation(this, R.anim.ttb)
-        val ttbAltAnim = AnimationUtils.loadAnimation(this, R.anim.ttb_alt)
-        val jFadeAnim = AnimationUtils.loadAnimation(this, R.anim.jevil_fade)
-        val ralseiAnim = AnimationUtils.loadAnimation(this, R.anim.btt_alt2)
-        val krisAnim = AnimationUtils.loadAnimation(this, R.anim.btt)
-        val susieAnim = AnimationUtils.loadAnimation(this,R.anim.btt_alt1)
-
-
-
-        //We fetch the views that will perform the animation
-        val titleText = findViewById(R.id.titleText) as TextView
-        val subtitleText = findViewById(R.id.subtitleText) as TextView
-        val jevilImage = findViewById(R.id.imageJevil) as ImageView
-        val ralseiImg = findViewById(R.id.ralseiImage) as ImageView
-        val krisImg = findViewById(R.id.krisImage) as ImageView
-        val susieImg = findViewById(R.id.susieImage) as ImageView
-
-
-
-
-        //Loads the animations
-        titleText.startAnimation(ttbAnim)
-        subtitleText.startAnimation(ttbAltAnim)
-        jevilImage.startAnimation(jFadeAnim)
-
-        ralseiImg.startAnimation(ralseiAnim)
-        krisImg.startAnimation(krisAnim)
-        susieImg.startAnimation(susieAnim)
-
-
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
+            }
         }
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        return navController.navigateUp(appBarConfiguration)
-                || super.onSupportNavigateUp()
     }
 }
